@@ -16,6 +16,10 @@ var set_cp = function(cp) { current_codepage = cp; };
 function char_codes(data) { var o = []; for(var i = 0, len = data.length; i < len; ++i) o[i] = data.charCodeAt(i); return o; }
 var debom_xml = function(data) { return data; };
 
+var DEF_PPI = 96, PPI = DEF_PPI;
+function px2pt(px) { return px * 96 / PPI; }
+function pt2px(pt) { return pt * PPI / 96; }
+
 var _getchar = function _gc1(x) { return String.fromCharCode(x); };
 if(typeof cptable !== 'undefined') {
 	set_cp = function(cp) { current_codepage = cp; current_cptable = cptable[cp]; };
@@ -7812,7 +7816,7 @@ return function parse_ws_xml_data(sdata, s, opts, guess) {
 
 function write_ws_xml_data(ws, opts, idx, wb) {
 	var o = [], r = [], range = safe_decode_range(ws['!ref']), cell, ref, rr = "", cols = [], R, C, rows = ws['!rows'];
-	console.log("!rows=", rows.legnth);
+	
 	for(C = range.s.c; C <= range.e.c; ++C) cols[C] = encode_col(C);
 	for(R = range.s.r; R <= range.e.r; ++R) {
 		r = [];
@@ -8347,7 +8351,6 @@ function write_CELLTABLE(ba, ws, idx, opts, wb) {
 	write_record(ba, 'BrtBeginSheetData');
 	var dense = Array.isArray(ws);
 	var cap = range.e.r;
-	console.log(ws['!rows']);
 	if(ws['!rows']) cap = Math.max(range.e.r, ws['!rows'].length - 1);
 	for(var R = range.s.r; R <= cap; ++R) {
 		rr = encode_row(R);
